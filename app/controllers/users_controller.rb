@@ -39,6 +39,15 @@ class UsersController < ApplicationController
     counts(@user)
   end
 
+  def likes
+    @user = User.find(params[:id])
+    #特定のユーザーが登録したお気に入りを全て取得する
+    favorites = Favorite.where(user_id: @user).pluck(:micropost_id)
+    @favorite_list = Micropost.find(favorites)
+    @favorite_list = Kaminari.paginate_array(@favorite_list).page(params[:page]).per(10)
+    counts(@user)
+  end
+
   private
   
   def user_params
